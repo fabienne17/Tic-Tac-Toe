@@ -1,10 +1,10 @@
 # Tic Tac Toe game #
-### # to launch: # ###
+### to launch: ###
 1. npm install --save
 2. npm start (runs on localhost:7777)
 
 
-# Resources #
+### Resources ###
 1. HTML
 2. JavaScript
 3. JQuery

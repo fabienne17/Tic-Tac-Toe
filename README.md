@@ -15,4 +15,4 @@
 
 
 ### Repository ###
-### https://bitbucket.org/fabrighthalo/Tic-Tac-Toe ###
+### https://github.com/fabienne17/Tic-Tac-Toe.git ###

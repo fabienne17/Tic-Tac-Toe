@@ -78,42 +78,74 @@ export default class Board extends React.Component {
 	
 	checkWinner(placesLeft, moves) {
 		
-		var row1, row2, row3, column1, column2, column3, diagonal1, diagonal2, loser;
+		var row1 = false;
+		var row2 = false;
+		var row3 = false;
+		var column1 = false;
+		var column2 = false;
+		var column3 = false;
+		var diagonal1 = false;
+		var diagonal2 = false;
+		var loser, winner;
 
 		//rows
-		var row1 = ((moves[0] === moves[1]) && (moves[1] === moves[2]) && (moves[2] === moves[0])) ? [moves[0],true] : false;
-		console.log("row1: "+ row1);
+		if ((moves[0] === moves[1]) && (moves[1] === moves[2]) && (moves[2] === moves[0])) {
+			row1 = true;
+			winner = moves[0];
+		};
+		//console.log("row1: "+ row1);
 
-		var row2 = ((moves[3] === moves[4]) && (moves[4] === moves[5]) && (moves[5] === moves[3])) ? [moves[3],true] : false;
-		console.log("row2: "+ row2);
+		if ((moves[3] === moves[4]) && (moves[4] === moves[5]) && (moves[5] === moves[3])){
+			row2 = true;
+			winner = moves[3];
+		};
+		//console.log("row2: "+ row2);
 
-		var row3 = ((moves[8] === moves[7]) && (moves[7] === moves[6]) && (moves[6] === moves[8])) ? [moves[8],true] : false;
-		console.log("row3: "+ row3);
+		if ((moves[8] === moves[7]) && (moves[7] === moves[6]) && (moves[6] === moves[8])){
+			row3 = true;
+			winner = moves[8];
+		};
+		//console.log("row3: "+ row3);
 
 		//diagonals
-		var diagnonal1 = ((moves[0] === moves[4]) && (moves[4] === moves[8]) && (moves[8] === moves[0])) ? [moves[0],true] : false;
-		console.log("diagnonal1: "+ diagnonal1);
+		if ((moves[0] === moves[4]) && (moves[4] === moves[8]) && (moves[8] === moves[0])){
+			diagonal1 = true;
+			winner = moves[0];
+		};
+		//console.log("diagnonal1: "+ diagonal1);
 
-		var diagonal2 = ((moves[2] === moves[4]) && (moves[4] === moves[6]) && (moves[6] === moves[2])) ? [moves[2],true] : false;
-		console.log("diagonal2: "+ diagonal2);
+		if ((moves[2] === moves[4]) && (moves[4] === moves[6]) && (moves[6] === moves[2])){
+			diagonal2 = true;
+			winner = moves[2];
+		};
+		//console.log("diagonal2: "+ diagonal2);
 
 		//columns
-		var column1 = ((moves[0] === moves[3]) && (moves[3] === moves[6]) && (moves[6] === moves[0])) ? [moves[0],true] : false;
-		console.log("column1: "+ column1);
+		if ((moves[0] === moves[3]) && (moves[3] === moves[6]) && (moves[6] === moves[0])){
+			column1 = true;
+			winner = moves[0];
+		};
+		//console.log("column1: "+ column1);
 
-		var column2 = ((moves[1] === moves[4]) && (moves[4] === moves[7]) && (moves[7] === moves[1])) ? [moves[1],true] : false;
-		console.log("column2: "+ column2);
+		if ((moves[1] === moves[4]) && (moves[4] === moves[7]) && (moves[7] === moves[1])){
+			column2 = true;
+			winner = moves[1];
+		};
+		//console.log("column2: "+ column2);
 
-		var column3 = ((moves[2] === moves[5]) && (moves[5] === moves[8]) && (moves[2] === moves[8])) ? [moves[2],true] : false;
-		console.log("column3: "+ column3);
+		if ((moves[2] === moves[5]) && (moves[5] === moves[8]) && (moves[2] === moves[8])){
+			column3 = true;
+			winner = moves[2];
+		};
+		//console.log("column3: "+ column3);
 		
 		if (row1 || row2 || row3 || column1 || column2  || column3 || diagonal1  || diagonal2) {
 
+			loser = winner === "X" ? "O" : "X";
 			$('#tileMessage').hide();
 			$('#reset').show();
 			$('#modal' + loser).hide();
 			$('#winner').text('Winner: ');
-			loser = ();
 			$('button').attr('disabled', true);
 		}
 

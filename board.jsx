@@ -7,7 +7,7 @@ export default class Board extends React.Component {
 		this.state = {
 			playerTile: "X",
 			computerTile: "O",
-			moves: ["#","#","#","#","#","#","#","#","#"],
+			moves: ["0","1","2","3","4","5","6","7","8"],
 			placesLeft: [0,1,2,3,4,5,6,7,8]
 		};
 	}
@@ -30,67 +30,101 @@ export default class Board extends React.Component {
     }
 
 	playerMove(cell){
-		var move = this.state.playerTile;
-		$('#' + cell.target.id).html(move);
-		
+		//local copy of moves
+		var placesLeft = this.state.placesLeft;
 		var moves = this.state.moves;
-		moves[cell.target.id] = move;
+		//console.log(placesLeft);
+		//console.log(moves);
+
+		//local copy of player tile and move
+		var playerMove = Number(cell.target.id);
+		var playerTile = this.state.playerTile;
+
+		//change html at target and disable
+		$('#' + playerMove).html(playerTile).attr('disabled', true);		
+		
+		//keep track of player moves
+		moves[playerMove] = playerTile;
+		placesLeft.splice(placesLeft.indexOf(playerMove), 1);
+		//console.log("playerMove: " + playerMove);
+		//console.log(placesLeft);
+
+		//local copy of computer tile
+		var computerTile = this.state.computerTile;
+
+		//random computer move based on places left
+		var computerMove = placesLeft[Math.floor(Math.random() * placesLeft.length)];
+		//console.log("computerMove: " + computerMove);
+
+		//change html at target and disable
+		$('#' + computerMove).html(computerTile).attr('disabled', true);
+
+		//keep track of computer moves
+		placesLeft.splice(placesLeft.indexOf(computerMove), 1);
+		moves[computerMove] = computerTile;
+		//console.log(placesLeft);
+
+
+		//update global variables
 		this.setState({
 			moves: moves,
-			
+			placesLeft: placesLeft
 		});
 
-		$('#' + cell.target.id).attr('disabled', true);
-		
-		console.log(cell.target.id);
-		var placesLeft = this.state.placesLeft;
-		placesLeft.splice(cell.target.id, 1);
-	
-		console.log(placesLeft);
+		//console.log(moves);
 
-		// set time out
-		//computer makes random move
-		var computerMove = placesLeft[Math.floor(Math.random() * placesLeft.length)];
-		console.log("computerMove: " + computerMove);
-		
-
-		console.log(moves);
-		
-    	//this.checkWinner();
+    	this.checkWinner(placesLeft, moves);
 	}
-	/*
-	checkWinner() {
-		var moves = this.state.moves;
-		var winner1 = (moves[0] === moves[1] ) && (moves[1] === moves[2]) ? true : false;
+	
+	checkWinner(placesLeft, moves) {
 		
-		var winner2 = (moves[0] === moves[3] ) && (moves[3] === moves[6]) ? true : false;		
-		var winner3 = (moves[0] === moves[4] ) && (moves[4] === moves[8]) ? true : false;
+		var row1, row2, row3, column1, column2, column3, diagonal1, diagonal2, loser;
 
-		var winner4 = (moves[4] === moves[1] ) && (moves[1] === moves[7]) ? true : false;
-		var winner5 = (moves[4] === moves[2] ) && (moves[2] === moves[6]) ? true : false;
-		var winner6 = (moves[4] === moves[3] ) && (moves[3] === moves[5]) ? true : false;
+		//rows
+		var row1 = ((moves[0] === moves[1]) && (moves[1] === moves[2]) && (moves[2] === moves[0])) ? [moves[0],true] : false;
+		console.log("row1: "+ row1);
 
-		var winner7 = (moves[8] === moves[5] ) && (moves[5] === moves[2]) ? true : false;
-		var winner8 = (moves[8] === moves[7] ) && (moves[7] === moves[6]) ? true : false;
+		var row2 = ((moves[3] === moves[4]) && (moves[4] === moves[5]) && (moves[5] === moves[3])) ? [moves[3],true] : false;
+		console.log("row2: "+ row2);
+
+		var row3 = ((moves[8] === moves[7]) && (moves[7] === moves[6]) && (moves[6] === moves[8])) ? [moves[8],true] : false;
+		console.log("row3: "+ row3);
+
+		//diagonals
+		var diagnonal1 = ((moves[0] === moves[4]) && (moves[4] === moves[8]) && (moves[8] === moves[0])) ? [moves[0],true] : false;
+		console.log("diagnonal1: "+ diagnonal1);
+
+		var diagonal2 = ((moves[2] === moves[4]) && (moves[4] === moves[6]) && (moves[6] === moves[2])) ? [moves[2],true] : false;
+		console.log("diagonal2: "+ diagonal2);
+
+		//columns
+		var column1 = ((moves[0] === moves[3]) && (moves[3] === moves[6]) && (moves[6] === moves[0])) ? [moves[0],true] : false;
+		console.log("column1: "+ column1);
+
+		var column2 = ((moves[1] === moves[4]) && (moves[4] === moves[7]) && (moves[7] === moves[1])) ? [moves[1],true] : false;
+		console.log("column2: "+ column2);
+
+		var column3 = ((moves[2] === moves[5]) && (moves[5] === moves[8]) && (moves[2] === moves[8])) ? [moves[2],true] : false;
+		console.log("column3: "+ column3);
 		
-		if (winner1 || winner2 || winner3 || winner4 || winner5 || winner6 || winner7 || winner8) {
+		if (row1 || row2 || row3 || column1 || column2  || column3 || diagonal1  || diagonal2) {
+
 			$('#tileMessage').hide();
 			$('#reset').show();
-			var loser = moves[0] === "X" ? "O" : "X";
 			$('#modal' + loser).hide();
 			$('#winner').text('Winner: ');
+			loser = ();
 			$('button').attr('disabled', true);
-			
 		}
 
-	}*/
+	}
 
 	resetBoard(){
-		console.log('reload')
+		console.log('reload');
 	}
 
 	render() {
-		//Board 1
+		//Board
 		const boardStyle = {
 			width: "240px",
 			height: "240px",
@@ -108,7 +142,7 @@ export default class Board extends React.Component {
 			color: "#fff",
 			textAlign: "center",
 			textTransform: "uppercase"
-		}
+		};
 
 		return (
 			<div className="container text-center">
@@ -141,51 +175,69 @@ export default class Board extends React.Component {
 								<td style={tdStyle}>
 									<button id="0"
 										style={buttonStyle}									       
-									    onClick={this.playerMove.bind(this)}/>
+									    onClick={this.playerMove.bind(this)}>
+									    {this.state.moves[0]}
+									</button>
 								</td>
 								<td style={tdStyle}>
 									<button id="1"
 									    style={buttonStyle}									       
-									    onClick={this.playerMove.bind(this)}/>
+									    onClick={this.playerMove.bind(this)}>
+									    {this.state.moves[1]}
+									</button>
 								</td>
 								<td style={tdStyle}>
 									<button id="2"
 									       style={buttonStyle}									       
-									       onClick={this.playerMove.bind(this)}/>
+									       onClick={this.playerMove.bind(this)}>
+									    {this.state.moves[2]}
+									</button>
 								</td>
 							</tr>
 							<tr>
 								<td style={tdStyle}>
 									<button id="3"
 									       style={buttonStyle}									       
-									       onClick={this.playerMove.bind(this)}/>
+									       onClick={this.playerMove.bind(this)}>
+									    {this.state.moves[3]}
+									</button>
 								</td>
 								<td style={tdStyle}>
 									<button id="4"
 									       style={buttonStyle}									       
-									       onClick={this.playerMove.bind(this)}/>
+									       onClick={this.playerMove.bind(this)}>
+									    {this.state.moves[4]}
+									</button>
 								</td>
 								<td style={tdStyle}>
 									<button id="5"
 									       style={buttonStyle}									       
-									       onClick={this.playerMove.bind(this)}/>
+									       onClick={this.playerMove.bind(this)}>
+									    {this.state.moves[5]}
+									</button>
 								</td>
 							</tr>
 							<tr>
 								<td style={tdStyle}>
 									<button id="6"
 									       style={buttonStyle}									       
-									       onClick={this.playerMove.bind(this)}/>
+									       onClick={this.playerMove.bind(this)}>
+									    {this.state.moves[6]}
+									</button>
 								</td>
 								<td style={tdStyle}>
 									<button id="7"
 									       style={buttonStyle}									       
-									       onClick={this.playerMove.bind(this)}/>
+									       onClick={this.playerMove.bind(this)}>
+									    {this.state.moves[7]}
+									</button>
 								</td>
 								<td style={tdStyle}>
 									<button id="8"
 									       style={buttonStyle}									       
-									       onClick={this.playerMove.bind(this)}/>
+									       onClick={this.playerMove.bind(this)}>
+									    {this.state.moves[8]}
+									</button>
 								</td>
 							</tr>
 						</tbody>

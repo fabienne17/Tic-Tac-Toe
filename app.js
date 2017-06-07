@@ -6,13 +6,27 @@ import Board from './board.jsx';
 class App extends React.Component{
 	constructor(){
         super();
-        this.state = {};
+        this.resetBoard = this.resetBoard.bind(this);
+        this.state = {
+            board: ()=><Board />
+        };
+    }
+    resetBoard() {
+        this.setState({
+            board: ()=><Board/>
+        });
     }
     render() {   
-
+        const ActiveBoard = this.state.board;
         return (
-            <div className="container">
-                <Board />
+            <div className="container text-center">
+                <ActiveBoard />
+                <span id='reset' 
+                      type="button"
+                      className="btn btn-success"
+                      onClick={this.resetBoard}>
+                    RESET
+                </span>
             </div>
         );
     }

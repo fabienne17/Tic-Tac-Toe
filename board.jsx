@@ -11,6 +11,7 @@ export default class Board extends React.Component {
 			placesLeft: [0,1,2,3,4,5,6,7,8]
 		};
 	}
+
 	componentDidMount(){
 		$('#reset').hide();
 	}
@@ -21,8 +22,8 @@ export default class Board extends React.Component {
 		$('#modalO').attr('disabled', true);		
 		$('#modalX').attr('disabled', true);
     	$('#tileMessage').text("You chose: " + playerTile);
-    	console.log("player: " + playerTile);
-    	console.log("computer: " + computerTile);
+    	//console.log("player: " + playerTile);
+    	//console.log("computer: " + computerTile);
     	this.setState({
     		playerTile: playerTile,
     		computerTile: computerTile
@@ -30,18 +31,21 @@ export default class Board extends React.Component {
     }
 
 	playerMove(cell){
+		
 		//local copy of moves
 		var placesLeft = this.state.placesLeft;
 		var moves = this.state.moves;
 		//console.log(placesLeft);
 		//console.log(moves);
 
+		this.checkWinner(placesLeft, moves);
+
 		//local copy of player tile and move
 		var playerMove = Number(cell.target.id);
 		var playerTile = this.state.playerTile;
 
 		//change html at target and disable
-		$('#' + playerMove).html(playerTile).attr('disabled', true);		
+		$('#' + playerMove).attr('disabled', true);		
 		
 		//keep track of player moves
 		moves[playerMove] = playerTile;
@@ -57,13 +61,12 @@ export default class Board extends React.Component {
 		//console.log("computerMove: " + computerMove);
 
 		//change html at target and disable
-		$('#' + computerMove).html(computerTile).attr('disabled', true);
+		$('#' + computerMove).attr('disabled', true);
 
 		//keep track of computer moves
 		placesLeft.splice(placesLeft.indexOf(computerMove), 1);
 		moves[computerMove] = computerTile;
 		//console.log(placesLeft);
-
 
 		//update global variables
 		this.setState({
@@ -71,9 +74,7 @@ export default class Board extends React.Component {
 			placesLeft: placesLeft
 		});
 
-		//console.log(moves);
-
-    	this.checkWinner(placesLeft, moves);
+		this.checkWinner(placesLeft, moves);
 	}
 	
 	checkWinner(placesLeft, moves) {
@@ -142,17 +143,12 @@ export default class Board extends React.Component {
 		if (row1 || row2 || row3 || column1 || column2  || column3 || diagonal1  || diagonal2) {
 
 			loser = winner === "X" ? "O" : "X";
-			$('#tileMessage').hide();
+			$('#message').hide();
 			$('#reset').show();
 			$('#modal' + loser).hide();
 			$('#winner').text('Winner: ');
 			$('button').attr('disabled', true);
 		}
-
-	}
-
-	resetBoard(){
-		console.log('reload');
 	}
 
 	render() {
@@ -181,9 +177,6 @@ export default class Board extends React.Component {
 				<h1>Tic Tac Toe</h1>
 				<div>
 					<div id='message' className="btn btn-primary">
-						<span id='reset'
-							  onClick={this.resetBoard}>
-							Reset</span>
 					    <span id='tileMessage'>Pick a Tile</span>
 					</div>
 					<div>
@@ -206,8 +199,8 @@ export default class Board extends React.Component {
 							<tr>
 								<td style={tdStyle}>
 									<button id="0"
-										style={buttonStyle}									       
-									    onClick={this.playerMove.bind(this)}>
+										style={buttonStyle}
+										onClick={this.playerMove.bind(this)}>
 									    {this.state.moves[0]}
 									</button>
 								</td>
